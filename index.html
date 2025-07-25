@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>360° Viewer with Hotspots</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+  <style>
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
+    a-scene { position:absolute; top:0; left:0; width:100%; height:100%; }
+    .clickable { cursor:pointer; }
+    #popupOverlay { position:absolute; top:0; left:0; width:100%; height:100%; display:none;
+      justify-content:center; align-items:center; background:rgba(0,0,0,0.3); backdrop-filter:blur(5px); z-index:1000; }
+    #popupOverlay.show { display:flex; }
+    .popup-card {
+      position:relative;
+      z-index:1001;
+      background:#fff;
+      border-radius:20px;
+      padding:20px;
+      box-shadow:0 4px 16px rgba(0,0,0,0.2);
+      width:90%; max-width:300px;
+    }
+    #closeBtn { position:absolute; top:12px; right:12px; background:none; border:none; font-size:50px; color:#333; cursor:pointer; }
+    .popup-img { width:100%; border-radius:12px; margin-bottom:12px; }
+    .product-name { font-size:18px; font-weight:bold; text-align:center; color:#333; margin-bottom:4px; }
+    .specs { font-size:14px; text-align:center; color:#555; margin-bottom:16px; }
+    .buy-button {
+      position:relative;
+      z-index:1002;
+      display:block;
+      width:100%;
+      padding:12px 0;
+      background:#d8b873;
+      color:#fff;
+      font-size:16px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="popupOverlay">
+    <div class="popup-card">
+      <button id="closeBtn">×</button>
+      <img class="popup-img" id="popupImg" src="" alt="Product" />
+      <div class="product-name" id="popupName"></div>
+      <div class="specs" id="popupSpecs"></div>
+      <button id="buyBtn" class="buy-button">購入はこちら</button>
+    </div>
+  </div>
+
+  <a-scene embedded>
+    <a-assets>
+      <img id="skyTex" src="images/Z.2.png" />
+    </a-assets>
+    <a-sky src="#skyTex" rotation="0 180 0"></a-sky>
+    <a-entity id="cameraRig">
+      <a-camera id="cam" position="0 1.6 0" cursor="rayOrigin: mouse" raycaster="objects:.clickable"></a-camera>
+    </a-entity>
+
+    <!-- ホットスポット1 -->
+    <a-entity position="0.8 1.2 -2" look-at="#cam" class="clickable"
+              data-color="#D2B48C" data-img="images/angelique_1d_lp_14.jpg" data-name="Sarang Greige" data-specs="DIA:14.2mm  GDIA:13.2mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#D2B48C; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+    <!-- ホットスポット2 -->
+    <a-entity position="0 1.2 -2" look-at="#cam" class="clickable"
+              data-color="#888888" data-img="images/angelique_1d_klp_02_02.jpg" data-name="Luri Gray" data-specs="DIA:14.2mm  GDIA:13.3mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#888888; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+    <!-- ホットスポット3 -->
+    <a-entity position="-0.8 1.2 -2" look-at="#cam" class="clickable"
+              data-color="#CD853F" data-img="images/angelique_1d_lp_06.jpg" data-name="Yeppeo Brown" data-specs="DIA:14.2mm  GDIA:13.3mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#CD853F; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+    <!-- ホットスポット4 -->
+    <a-entity position="0.8 1.6 -2" look-at="#cam" class="clickable"
+              data-color="#5D99FF" data-img="images/angelique_1d_klp_06_02.jpg" data-name="Soda Blue" data-specs="DIA:14.5mm  GDIA:13.5mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#5D99FF; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+    <!-- ホットスポット5 -->
+    <a-entity position="0 1.6 -2" look-at="#cam" class="clickable"
+              data-color="#DEB887" data-img="images/angelique_1d_klp_05_02.jpg" data-name="Neko Beige" data-specs="DIA:14.5mm  GDIA:13.5mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#DEB887; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+    <!-- ホットスポット6 -->
+    <a-entity position="-0.8 1.6 -2" look-at="#cam" class="clickable"
+              data-color="#DD0000" data-img="images/angelique_1d_lp_08.jpg" data-name="Edge Pink" data-specs="DIA:14.5mm  GDIA:13.5mm"
+              onclick="showPopup(this.dataset, this)"
+              scale="0.3 0.3 0.3"
+              animation__mouseenter="property: scale; startEvents: mouseenter; to: 0.6 0.6 0.6; dur: 200"
+              animation__mouseleave="property: scale; startEvents: mouseleave; to: 0.3 0.3 0.3; dur: 200">
+      <a-plane class="clickable" width="0.6" height="0.6" position="0 0 0.03" material="opacity:0; shader:flat"></a-plane>
+      <a-circle radius="0.2" material="color:#fff; shader:flat" position="0 0 0.05"></a-circle>
+      <a-ring class="hotspot-ring" radius-inner="0.2" radius-outer="0.35" position="0 0 0.05"
+              material="color:#DD0000; opacity:0.9; shader:flat"></a-ring>
+    </a-entity>
+
+  </a-scene>
+
+  <script>
+    let currentData = {};
+    document.getElementById('closeBtn').addEventListener('click', hidePopup);
+    document.getElementById('buyBtn').addEventListener('click', function() {
+      window.open(currentData.link || 'https://www.lovelycontact.shop/?_gl=1*rfu6go*_gcl_au*MTQwNTM2MTU4NS4xNzUzNDM5NTAz*_ga*MTEwMjA5ODc3My4xNzUzNDM5NTA0*_ga_N96S8QTTXV*czE3NTM0NTM3OTMkajYwJGwwJGgw', '_blank');
+    });
+
+    function showPopup(data, hotspotEl) {
+      currentData = data;
+      document.getElementById('buyBtn').style.background = data.color;
+      const ringEl = hotspotEl.querySelector('.hotspot-ring');
+      ringEl.setAttribute('material', `color: ${data.color}; opacity:0.9; shader:flat`);
+      document.getElementById('popupImg').src = data.img;
+      document.getElementById('popupName').textContent = data.name;
+      document.getElementById('popupSpecs').textContent = data.specs;
+      document.getElementById('popupOverlay').classList.add('show');
+    }
+
+    function hidePopup() {
+      document.getElementById('popupOverlay').classList.remove('show');
+    }
+  </script>
+</body>
+</html>
